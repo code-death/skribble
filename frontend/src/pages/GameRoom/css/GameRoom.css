@@ -43,21 +43,20 @@
 
 .user-list {
     display: flex;
-    gap: 12px;
+    gap: 20px;
     flex-direction: column;
     justify-content: flex-start;
-    width: 15%;
+    width: 16%;
 }
 
 .user-card {
-    flex-wrap: wrap;
-    min-width: 92%;
+    min-width: 96%;
+    padding: 8px 5px 0;
     width: max-content;
-    align-items: center;
+    align-items: flex-end;
     text-align: center;
     justify-content: space-between;
     display: flex;
-    padding: 8px;
     font-weight: 700;
     color: #1a1a1a;
     cursor: pointer;
@@ -72,16 +71,37 @@
     transform: scale(1.02);
 }
 
+.user-card-sub {
+    align-self: center;
+    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 0px 4px 8px
+}
+
+.user-avatar-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.user-avatar {
+    width: 72px;
+    height: auto;
+}
+
 .drawing-board {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 60%;
+    width: 58%;
 }
 
 .drawing-area {
-    min-height: 500px;
+    min-height: 490px;
     overflow: hidden;
     height: 87.4%;
     background-color: white;

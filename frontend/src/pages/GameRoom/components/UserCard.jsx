@@ -1,19 +1,27 @@
 import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {createAvatar} from "@dicebear/core";
+import {avataaars} from "@dicebear/collection";
 
 const UserCard = ({user, roomId}) => {
     const activeUser = useSelector(state => state.user)
+
+    const avatar = createAvatar(avataaars, {
+        size: 128,
+        seed: user.name + user.socket
+    }).toDataUriSync();
+
     return (
         <div className={'user-card'}>
-            <div>
+            <div className={'user-card-sub'}>
                 <p>{'#' + user.rank}</p>
-                <p style={{color: '#1a1a1a'}}>{'C'}</p>
             </div>
-            <div>
-                <p>{user.name}<span> {activeUser._id === user._id ? '(You)' : ''}</span></p>
+            <div className={'user-card-sub'}>
+                <p style={{color: activeUser._id === user._id ? '#747bff' : "#1a1a1a"}}>{user.name}</p>
                 <p>{user.score}</p>
             </div>
-            <div>
-                <p>{user.avatar}</p>
+            <div className={'user-avatar-container'}>
+                {avatar ? <img className={'user-avatar'} src={avatar} alt={'A'}/> : null}
             </div>
         </div>
     )

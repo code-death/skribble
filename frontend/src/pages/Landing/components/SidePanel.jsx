@@ -60,7 +60,6 @@ const SidePanel = ({socket}) => {
             isDrawer: true,
             rank: 1,
             score: 0,
-            avatar: 'A',
             socket: socket.id,
         };
 
@@ -92,7 +91,9 @@ const SidePanel = ({socket}) => {
                 />
             </Modal>
             <h1 style={{textAlign: 'center'}}>Play Skribble !</h1>
-            <CharacterSelection />
+            <CharacterSelection
+                seed={name}
+            />
             <FormActions
                 name={name}
                 setName={setName}
