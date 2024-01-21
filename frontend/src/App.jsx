@@ -8,7 +8,7 @@ import io from "socket.io-client";
 
 function App() {
     const rootElement = document.getElementById('root');
-    const socket = io('http://localhost:8001');
+    const socket = io(import.meta.env.VITE_API_SOCKET_URL);
 
     return (
         <BrowserRouter>
