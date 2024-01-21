@@ -15,7 +15,7 @@ export const io = new Server(server, {
     cors: ['http://localhost:3000']
 });
 
-server.listen(process.env.SOCKET_POST, () => {
+server.listen(process.env.SOCKET_PORT, () => {
     console.log(`Server running on port ${process.env.SOCKET_POST}!`)
 })
 
@@ -42,37 +42,37 @@ async function connectDb() {
 
 connectDb();
 
-app.use(bodyParser.json({limit: '20mb'}));
-app.use(bodyParser.urlencoded({limit: '20mb', extended: false}));
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization,x-token, Access-Control-Allow-Credentials');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-});
-
-app.use("*", (req, res, next) => {
-    const { hostname, originalUrl, protocol, method } = req;
-    console.log(
-        `${
-            method
-        }  ${protocol}://${hostname}:8102${originalUrl}`
-    );
-    next();
-});
-
-app.use('/api/words', word);
-app.use('/api/rooms', room);
-app.use('/api/wordScript', wordScript);
-
-
-app.listen(8100, (error) => {
-    if (!error) {
-        console.log(`API is running on port: 8102! Build something amazing!`);
-    }
-})
+// app.use(bodyParser.json({limit: '20mb'}));
+// app.use(bodyParser.urlencoded({limit: '20mb', extended: false}));
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization,x-token, Access-Control-Allow-Credentials');
+//     res.header('Access-Control-Allow-Credentials', 'true');
+//     if (req.method === 'OPTIONS') {
+//         res.sendStatus(200);
+//     } else {
+//         next();
+//     }
+// });
+//
+// app.use("*", (req, res, next) => {
+//     const { hostname, originalUrl, protocol, method } = req;
+//     console.log(
+//         `${
+//             method
+//         }  ${protocol}://${hostname}:8102${originalUrl}`
+//     );
+//     next();
+// });
+//
+// app.use('/api/words', word);
+// app.use('/api/rooms', room);
+// app.use('/api/wordScript', wordScript);
+//
+//
+// app.listen(8100, (error) => {
+//     if (!error) {
+//         console.log(`API is running on port: 8102! Build something amazing!`);
+//     }
+// })
