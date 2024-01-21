@@ -15,8 +15,8 @@ export const io = new Server(server, {
     cors: ['http://localhost:3000']
 });
 
-server.listen(8001, () => {
-    console.log('Server running on port 8001!')
+server.listen(process.env.SOCKET_POST, () => {
+    console.log(`Server running on port ${process.env.SOCKET_POST}!`)
 })
 
 io.on('connection', (socket) => {
@@ -71,7 +71,7 @@ app.use('/api/rooms', room);
 app.use('/api/wordScript', wordScript);
 
 
-app.listen(8102, (error) => {
+app.listen(8100, (error) => {
     if (!error) {
         console.log(`API is running on port: 8102! Build something amazing!`);
     }
