@@ -18,7 +18,11 @@ const FormActions = (props) => {
 
     const handleJoinRoom = () => {
         if(props.name !== '') {
-            props.openRoomModal();
+            if(props?.activeRoomId !== "") {
+                props.handleJoinRoom(props.activeRoomId);
+            } else {
+                props.openRoomModal();
+            }
         } else {
             showNotification('Enter A Valid Name', 'error')
         }
@@ -34,7 +38,7 @@ const FormActions = (props) => {
             />
             <div className={'button-group'}>
                 <button onClick={handleJoinRoom} className={'form-actions-button primary'}>
-                    Join A Room
+                    {props.activeRoomId ? "Join The Room" : "Join A Room"}
                 </button>
                 <button onClick={handleCreateRoom} className={'form-actions-button secondary'}>
                     Create A Room

@@ -216,7 +216,7 @@ input[type='color'] {
 
 .chat-box {
     color: #1a1a1a;
-    padding: 8px;
+    padding: 8px 0 8px 0;
     background-color: white;
     border-radius: 12px;
     display: flex;
@@ -226,10 +226,16 @@ input[type='color'] {
     width: 25%;
 }
 
+.chats {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 650px;
+}
+
 .chat-input {
     display: flex;
     justify-content: space-between;
-    width: 99%;
+    width: 95%;
     border: 2px solid #1a1a1a;
     transition: border 300ms ease-in;
     background-color: white;
@@ -239,6 +245,7 @@ input[type='color'] {
     outline: none;
     font-size: 16px;
     align-items: center;
+    align-self: center;
 }
 
 .focused {

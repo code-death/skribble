@@ -8,11 +8,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Provider} from 'react-redux'
 import store from "./redux/store.js";
 import {ToastContainer} from "react-toastify";
+import Loader from "./components/Loader.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
         <ToastContainer
-            position="top-right"
+            position="top-center"
             autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}

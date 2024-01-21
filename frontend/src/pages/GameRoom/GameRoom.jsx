@@ -6,68 +6,10 @@ import DrawingBoard from "./components/DrawingBoard.jsx";
 import ChatBox from "./components/ChatBox.jsx";
 import {useSearchParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {removeUser, setRoomId, setUserInfo, updateActiveUserList} from "../../redux/store.js";
-import io from "socket.io-client";
+import {changeLoadingState, setRoomId, setUserInfo, updateActiveUserList} from "../../redux/store.js";
 import _ from "lodash";
-
-const users = [
-    {
-        name: 'Tom',
-        id: '1',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Tim',
-        id: '2',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Poorvansh',
-        id: '3',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Pokemon',
-        id: '4',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Devil',
-        id: '5',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Pirate',
-        id: '6',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Jack Sparrow',
-        id: '7',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-    {
-        name: 'Dante',
-        id: '8',
-        score: '0',
-        avatar: 'A',
-        rank: 1
-    },
-]
+import {useNavigate} from "react-router";
+import {toast} from "react-toastify";
 
 const GameRoom = ({socket}) => {
     const canvasRef = useRef(null);
@@ -86,6 +28,7 @@ const GameRoom = ({socket}) => {
     const userList = useSelector(state => state.userList);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSubmit = (answer, color) => {
         let chat = {};
@@ -101,15 +44,18 @@ const GameRoom = ({socket}) => {
 
         } else {
             let roomId = params.get('roomId');
+            dispatch(setRoomId(roomId));
             let user = JSON.parse(window.sessionStorage.getItem('user'))
 
-            if (roomId && roomId !== '') {
-                dispatch(setRoomId(roomId));
+            if (roomId && roomId !== '' && user && !_.isEmpty(user)) {
                 socket.on('connect', () => {
                     dispatch(setUserInfo({...user, socket: socket.id}))
                     window.sessionStorage.setItem('user', JSON.stringify({...user, socket: socket.id}));
                     socket.emit('join-room', user, roomId);
                 })
+            } else {
+                navigate('/');
+                toast.warn('Write a name first')
             }
         }
     }, [params]);
@@ -119,10 +65,10 @@ const GameRoom = ({socket}) => {
         socket.on('joined-room', (response, joined_user) => {
             if(response.users && response.users.length !== 0) {
                 dispatch(updateActiveUserList(response.users));
+                dispatch(changeLoadingState(false));
             }
 
             if(joined_user && !_.isEmpty(joined_user) && user.socket === joined_user.socket) {
-                console.log(joined_user)
                 dispatch(setUserInfo(joined_user));
                 window.sessionStorage.setItem('user', JSON.stringify(joined_user));
             }

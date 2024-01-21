@@ -28,9 +28,9 @@ const ChatBox = (props) => {
 
     return(
         <div className={'chat-box'}>
-            <div>
+            <div className={'chats'}>
                 {props.chatThread && props.chatThread.length !== 0 && props.chatThread.map((chat, index) => (
-                    <p style={{color: chat.color}} key={index} className={'chat-text'}>
+                    <p style={{color: chat.color, backgroundColor: (index%2 ===0 ? 'transparent' : '#ececec'), padding: '4px 12px'}} key={index} className={'chat-text'}>
                         {chat.userName}: {chat.text}
                     </p>
                 ))}

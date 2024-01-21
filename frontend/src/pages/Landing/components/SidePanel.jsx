@@ -4,9 +4,9 @@ import {Modal} from "antd";
 import React, {useState} from "react";
 import {useNavigate} from "react-router";
 import {showNotification} from "../../../utility/utility.js";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuidV4} from "uuid";
-import {setRoomId as setRoom, setUserInfo} from "../../../redux/store.js";
+import {changeLoadingState, setRoomId as setRoom, setUserInfo} from "../../../redux/store.js";
 
 const SidePanel = ({socket}) => {
     const [roomJoinModalOpen, setRoomJoinModal] = useState(false);
@@ -14,8 +14,9 @@ const SidePanel = ({socket}) => {
     const [name, setName] = useState('')
 
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
+
+    const activeRoomId = useSelector(state => state.roomId);
 
     const openRoomModal = () => {
         setRoomJoinModal(true)
@@ -41,11 +42,13 @@ const SidePanel = ({socket}) => {
                 socket.emit('join-room', user, tempId);
                 dispatch(setRoom(tempId));
                 dispatch(setUserInfo(user));
+                dispatch(changeLoadingState(true));
                 navigate(`/play?roomId=${tempId}`)
             } else {
                 socket.emit('join-room', user, roomId);
                 dispatch(setRoom(roomId));
                 dispatch(setUserInfo(user));
+                dispatch(changeLoadingState(true));
                 navigate(`/play?roomId=${roomId}`)
             }
         } else {
@@ -96,6 +99,8 @@ const SidePanel = ({socket}) => {
                 seed={name}
             />
             <FormActions
+                handleJoinRoom={handleJoinRoom}
+                activeRoomId={activeRoomId}
                 name={name}
                 setName={setName}
                 handleCreateRoom={handleCreateRoom}

@@ -6,7 +6,8 @@ const roomSlice = createSlice({
     initialState: {
         roomId: '',
         user: {},
-        userList: []
+        userList: [],
+        isLoading: true
     },
     reducers: {
         setRoomId: (state, action) => {
@@ -21,16 +22,25 @@ const roomSlice = createSlice({
         removeUser: (state, action) => {
             let newList = [];
             userList.forEach(user => {
-                if(user.id !== action.id) {
+                if (user.id !== action.id) {
                     newList.push(user);
                 }
             })
             state.userList = newList;
+        },
+        changeLoadingState: (state, action) => {
+            state.isLoading = action.payload;
         }
     }
 })
 
-export const {setRoomId, setUserInfo, updateActiveUserList, removeUser} = roomSlice.actions
+export const {
+    setRoomId,
+    setUserInfo,
+    updateActiveUserList,
+    removeUser,
+    changeLoadingState
+} = roomSlice.actions
 
 const store = configureStore({
     reducer: roomSlice.reducer

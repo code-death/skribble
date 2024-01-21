@@ -3,10 +3,10 @@ import SidePanel from "./components/SidePanel.jsx";
 import MainPanel from "./components/MainPanel.jsx";
 
 const Landing = ({socket}) => {
-    return(
+    return (
         <div className={'landing-container'}>
-            <MainPanel />
-            <SidePanel socket={socket} />
+            <MainPanel/>
+            <SidePanel socket={socket}/>
         </div>
     )
 }
