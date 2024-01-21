@@ -1,4 +1,4 @@
-import rough from 'roughJs'
+import rough from 'roughjs'
 import {useEffect, useLayoutEffect, useState} from "react";
 import {ColorPicker, Select, Tooltip} from "antd";
 import {ClearOutlined, FormatPainterFilled, FormatPainterOutlined, RedoOutlined, UndoOutlined} from "@ant-design/icons";
