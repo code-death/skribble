@@ -1,17 +1,13 @@
 import { createAvatar } from '@dicebear/core';
 import {avataaars} from '@dicebear/collection';
 import {useEffect, useMemo, useState} from "react";
+import {v4 as uuidV4} from 'uuid'
 
 const CharacterSelection = (props) => {
-    const [seed, setSeed] = useState(props.seed);
-
-    useEffect(() => {
-        setSeed(props.seed)
-    }, [props.seed]);
 
     const avatar = createAvatar(avataaars, {
             size: 128,
-            seed: seed
+            seed: (props?.seed !== "" ? props.seed : uuidV4()) + props.socket.id
             // ... other options
         }).toDataUriSync();
 

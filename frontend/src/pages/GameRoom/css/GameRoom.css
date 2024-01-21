@@ -50,6 +50,7 @@
 }
 
 .user-card {
+    transform: scale(1);
     min-width: 96%;
     padding: 8px 5px 0;
     width: max-content;
@@ -64,6 +65,16 @@
     border-radius: 12px;
     transition: transform 300ms ease-in-out;
     height: 50px;
+}
+
+.user-avatar-back {
+    left: 12.1vw;
+    width: 62px;
+    height: 62px;
+    position: absolute;
+    background-color: #9499ff;
+    border-radius: 400px;
+    top: 33vh;
 }
 
 .user-card:hover {
@@ -82,12 +93,26 @@
 }
 
 .user-avatar-container {
+    position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-background {
+    position: absolute;
+    top: 22%;
+    left: 0;
+    right: 0;
+    bottom: -24%;
+    background-color: #9499ff;
+    border-radius: 300px;
+    z-index: -1;
 }
 
 .user-avatar {
+    z-index: 10;
     width: 72px;
     height: auto;
 }

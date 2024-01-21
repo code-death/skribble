@@ -21,6 +21,7 @@ const UserCard = ({user, roomId}) => {
                 <p>{user.score}</p>
             </div>
             <div className={'user-avatar-container'}>
+                <div className="avatar-background"></div>
                 {avatar ? <img className={'user-avatar'} src={avatar} alt={'A'}/> : null}
             </div>
         </div>

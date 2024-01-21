@@ -92,6 +92,7 @@ const SidePanel = ({socket}) => {
             </Modal>
             <h1 style={{textAlign: 'center'}}>Play Skribble !</h1>
             <CharacterSelection
+                socket={socket}
                 seed={name}
             />
             <FormActions
