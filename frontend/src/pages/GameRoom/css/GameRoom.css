@@ -1,0 +1,222 @@
+.game-room-container {
+    width: 100vw;
+    height: 100vh;
+    padding: 24px;
+    background: url('/doodle_background.png');
+    background-size: cover;
+    background-blend-mode: color-burn;
+    background-color: #151515;
+}
+
+.game-navbar {
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 32px;
+    font-weight: 700;
+    padding: 4px 24px;
+    display: flex;
+    align-items: center;
+    width: 93%;
+    height: 60px;
+    background-color: #747bff;
+    border-radius: 12px;
+    box-shadow: rgba(116, 123, 255, 0.3) 4px 5px 20px 0px;
+}
+
+.timer {
+    width: 32px;
+}
+
+.word-guess {
+
+}
+
+.game-area {
+    display: flex;
+    padding: 12px 0px;
+    width: 96.2%;
+}
+
+.round-info {
+    font-size: 24px;
+}
+
+.user-list {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 15%;
+}
+
+.user-card {
+    flex-wrap: wrap;
+    min-width: 92%;
+    width: max-content;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    display: flex;
+    padding: 8px;
+    font-weight: 700;
+    color: #1a1a1a;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 12px;
+    transition: transform 300ms ease-in-out;
+    height: 50px;
+}
+
+.user-card:hover {
+    position: relative;
+    transform: scale(1.02);
+}
+
+.drawing-board {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+}
+
+.drawing-area {
+    min-height: 500px;
+    overflow: hidden;
+    height: 87.4%;
+    background-color: white;
+    width: 97%;
+    border-radius: 12px;
+}
+
+.drawing-tools {
+    overflow: scroll;
+    padding: 0px 16px;
+    height: 10.9%;
+    background-color: white;
+    width: 93.2%;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.color-picker {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.test-div {
+    width: 40px;
+    height: 40px;
+}
+
+.color-picker-input {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    height: 100%;
+    width: 100%;
+}
+
+.color-picker-input::-webkit-color-swatch {
+    border: none;
+    border-radius: 100px;
+}
+
+.color-picker-input::-moz-color-swatch {
+    border: none;
+    border-radius: 100px;
+}
+
+input[type='color'] {
+    border: none;
+    color: transparent;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.tool-container {
+    cursor: pointer;
+    margin-left: 12px;
+    padding: 8px;
+    border-radius: 12px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ant-select-selection-item {
+    padding: 0 !important;
+}
+
+.tool-container-active {
+    background-color: #9499ff;
+}
+
+.tool-container:hover {
+    background-color: #b4b9ff;
+}
+
+.tool-container-active:hover {
+    background-color: #9499ff !important;
+}
+
+.chat-box {
+    color: #1a1a1a;
+    padding: 8px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: space-between;
+    width: 25%;
+}
+
+.chat-input {
+    display: flex;
+    justify-content: space-between;
+    width: 99%;
+    border: 2px solid #1a1a1a;
+    transition: border 300ms ease-in;
+    background-color: white;
+    border-radius: 12px;
+    margin-top: 24px;
+    color: black;
+    outline: none;
+    font-size: 16px;
+    align-items: center;
+}
+
+.focused {
+    border: 2px solid #747bff !important;
+}
+
+.input-with-end-item {
+    font-size: 16px;
+    flex-grow: 1;
+    padding: 12px;
+    outline: none;
+    border: none;
+    background: transparent;
+    color: #1a1a1a;
+}
+
+.input-with-end-item:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.disabled-overlay {
+    pointer-events: none;
+    background-color: #dedede;
+}

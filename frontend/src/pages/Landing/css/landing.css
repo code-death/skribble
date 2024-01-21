@@ -1,0 +1,120 @@
+.landing-container {
+    display: flex;
+    background: url(/doodle_background.png);
+    background-size: cover;
+    background-blend-mode: color-burn;
+    background-color: #151515;
+}
+
+.landing-side-panel {
+    min-height: max-content;
+    position: absolute;
+    right: 0;
+    padding: 24px;
+    background-color: #747bff;
+    width: 40vw;
+    height: 93.8%;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+
+.main-panel-container {
+    width: 60vw;
+    height: 100vh;
+}
+
+.character-selection {
+    width: 95.2%;
+    padding: 12px 16px;
+    height: 40vh;
+    background-color: #535bf2;
+    border-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.3) 4px 5px 20px -10px;
+}
+
+.side-panel-form-actions {
+    width: 100%;
+}
+
+.form-actions-name-input {
+    width: 95.2%;
+    background-color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-top: 24px;
+    color: black;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.form-actions-name-input:focus {
+    box-shadow: rgba(0, 0, 0, 0.3) 4px 5px 20px -10px;
+
+}
+
+.button-group {
+    width: 100%;
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.form-actions-button {
+    width: 45%;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 700;
+    outline: none;
+}
+
+.secondary {
+    border: 2px solid white;
+    background-color: transparent;
+    color: black;
+    transition: background-color 300ms ease-in-out;
+}
+
+.secondary:hover {
+    background-color: white;
+    border: 2px solid white;
+}
+
+.primary {
+    background-color: #535bf2;
+    transition: background-color 300ms ease-in-out;
+}
+
+.primary:hover {
+    background-color: #4a51e3;
+}
+
+.carrousel-container {
+    padding: 8px;
+    border-radius: 24px;
+    position: relative;
+    top:10vh;
+    left: 3.9vw;
+    z-index: 1;
+    width: 80%;
+    height: 60vh;
+}
+
+.carousel-content {
+    margin-top: 6%;
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.carousel-img {
+    margin-bottom: 48px;
+    border-radius: 32px;
+    position: relative;
+    left: 10%;
+}
+
+.room-join-modal {
+    background-color: #747bff;
+}
