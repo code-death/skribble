@@ -7,7 +7,8 @@ const roomSlice = createSlice({
         roomId: '',
         user: {},
         userList: [],
-        isLoading: true
+        isLoading: true,
+        socket: ''
     },
     reducers: {
         setRoomId: (state, action) => {
@@ -30,6 +31,9 @@ const roomSlice = createSlice({
         },
         changeLoadingState: (state, action) => {
             state.isLoading = action.payload;
+        },
+        setSocketId: (state, action) => {
+            state.socket = action.payload
         }
     }
 })
@@ -39,7 +43,8 @@ export const {
     setUserInfo,
     updateActiveUserList,
     removeUser,
-    changeLoadingState
+    changeLoadingState,
+    setSocketId
 } = roomSlice.actions
 
 const store = configureStore({

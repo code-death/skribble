@@ -23,10 +23,8 @@ export default function handleSocketEvents(socket, io) {
     socket.on('join-room', async (data, roomId) => {
         if (roomId !== '') {
             socket.join(roomId);
-
             try {
                 let {res, joined_user} = await joinUserToRoomHandler({user: {...data, socket: socket.id}, roomId});
-
                 io.to(roomId).emit('joined-room', res, joined_user);
             } catch (e) {
                 console.log(e)
@@ -42,7 +40,6 @@ export default function handleSocketEvents(socket, io) {
             if(rooms_to_leave && !_.isEmpty(rooms_to_leave)) {
                 await Promise.all(rooms_to_leave.map(async roomId => {
                     let {res, left_user} = await leaveRoomWithSocketId(left_socket, roomId);
-
                     if(left_user && !_.isEmpty(left_user)) {
                         io.to(roomId).emit('left-room', res, left_user);
                     }
@@ -54,7 +51,7 @@ export default function handleSocketEvents(socket, io) {
 
     socket.on('guess-word', (chat, roomId) => {
         if (roomId !== '') {
-            socket.to(roomId).emit('receive_message', chat);
+            io.to(roomId).emit('receive_message', chat);
         }
     });
 

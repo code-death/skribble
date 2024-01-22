@@ -58,14 +58,9 @@ class BaseHelper {
 
     async updateObjectById(objectId, updateObject) {
         try {
-            const object = await this.model.findById(objectId);
-            if (!object) {
-                throw `${objectId} Not Found`;
-            }
-            for (let prop in updateObject) {
-                object[prop] = updateObject[prop];
-            }
-            return await object.save();
+            return await this.model.findByIdAndUpdate(objectId, updateObject, {
+                new: true
+            })
         } catch (error) {
             throw error;
         }

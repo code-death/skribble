@@ -27,6 +27,8 @@ export async function leaveRoomWithSocketId(socket, roomId) {
             updated_room.users = temp_users;
         }
 
+
+
         let res =  await roomHelper.updateObjectById(existing_room._id, updated_room);
 
         return {res, left_user}
@@ -50,6 +52,7 @@ export async function createNewRoomHandler(input) {
 
         let res = await addNewRoomHandler(model);
 
+
         let joined_user = {};
 
         res.users.forEach(user => {
@@ -57,6 +60,7 @@ export async function createNewRoomHandler(input) {
                 joined_user = user;
             }
         })
+
         return {res, joined_user}
     } catch (e) {
         throw e
@@ -106,8 +110,7 @@ export async function joinUserToRoomHandler(input) {
             existing_room.users.push(model.user);
         }
 
-        let socket = await checkAndAddSocketData(input.user.socket, model.roomId);
-
+        await checkAndAddSocketData(input.user.socket, model.roomId);
 
         let res = await roomHelper.updateObjectById(existing_room._id, existing_room)
 

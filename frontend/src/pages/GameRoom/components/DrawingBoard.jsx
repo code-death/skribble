@@ -81,7 +81,6 @@ const DrawingBoard = ({
     useEffect(() => {
         if (user.isDrawer) {
             const draw = () => {
-                console.log('send')
                 socket.emit('draw-shape', elements, roomId)
             }
             let interval = setInterval(draw, 500);

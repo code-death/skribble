@@ -23,12 +23,12 @@ export async function getRoomsToLeaveForaSocket(socket) {
 export async function checkAndAddSocketData(socket, roomId) {
     let socketCheck = await socketExist(socket);
 
+
     if(socketCheck && !_.isEmpty(socketCheck)) {
         if (socketCheck?.rooms?.includes(roomId)) {
 
         } else {
             let updateObj = {...socketCheck, rooms: [...socketCheck.rooms, roomId]}
-
             await socketInfoHelper.updateObjectById(socketCheck._id, updateObj);
         }
     } else {

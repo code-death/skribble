@@ -139,7 +139,7 @@
     padding: 0px 16px;
     height: 10.9%;
     background-color: white;
-    width: 93.2%;
+    width: 94.2%;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -224,12 +224,13 @@ input[type='color'] {
     gap: 12px;
     justify-content: space-between;
     width: 25%;
+    height: max-content;
 }
 
 .chats {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 650px;
+    height: 67vh;
 }
 
 .chat-input {

@@ -26,6 +26,7 @@ const GameRoom = ({socket}) => {
     const user = useSelector(state => state.user);
     const roomId = useSelector(state => state.roomId);
     const userList = useSelector(state => state.userList);
+    const socketId = useSelector(state => state.socket)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -45,17 +46,15 @@ const GameRoom = ({socket}) => {
         } else {
             let roomId = params.get('roomId');
             dispatch(setRoomId(roomId));
-            let user = JSON.parse(window.sessionStorage.getItem('user'))
+            let user = JSON.parse(window.sessionStorage.getItem('user'));
 
             if (roomId && roomId !== '' && user && !_.isEmpty(user)) {
-                socket.on('connect', () => {
-                    dispatch(setUserInfo({...user, socket: socket.id}))
-                    window.sessionStorage.setItem('user', JSON.stringify({...user, socket: socket.id}));
+                    dispatch(setUserInfo({...user, socket: socketId}))
+                    window.sessionStorage.setItem('user', JSON.stringify({...user, socket: socketId}));
                     socket.emit('join-room', user, roomId);
-                })
             } else {
-                navigate('/');
-                toast.warn('Write a name first')
+                // navigate('/');
+                // toast.warn('Write a name first')
             }
         }
     }, [params]);
@@ -65,12 +64,12 @@ const GameRoom = ({socket}) => {
         socket.on('joined-room', (response, joined_user) => {
             if(response.users && response.users.length !== 0) {
                 dispatch(updateActiveUserList(response.users));
-                dispatch(changeLoadingState(false));
             }
 
             if(joined_user && !_.isEmpty(joined_user) && user.socket === joined_user.socket) {
                 dispatch(setUserInfo(joined_user));
                 window.sessionStorage.setItem('user', JSON.stringify(joined_user));
+                dispatch(changeLoadingState(false));
             }
         });
 
@@ -88,7 +87,6 @@ const GameRoom = ({socket}) => {
 
     useEffect(() => {
         socket.on('receive_message', (response) => {
-            console.log(response)
             if (response?.text !== '') {
                 setChatThread(prev => [...prev, {text: response.text, userName: response.userName, color: response.color}]);
             }
