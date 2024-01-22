@@ -53,8 +53,8 @@ const GameRoom = ({socket}) => {
                     window.sessionStorage.setItem('user', JSON.stringify({...user, socket: socketId}));
                     socket.emit('join-room', user, roomId);
             } else {
-                // navigate('/');
-                // toast.warn('Write a name first')
+                navigate('/');
+                toast.warn('Write a name first')
             }
         }
     }, [params]);

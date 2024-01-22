@@ -19,6 +19,8 @@ function App({socket}) {
             dispatch(setSocketId(socket.id))
         };
 
+        socket.on('connect', handleConnect)
+
         return () => {
             socket.off('connect', handleConnect);
         };
@@ -26,6 +28,7 @@ function App({socket}) {
 
     return (
         <BrowserRouter>
+            {isLoading ? <Loader /> : null}
             <Routes>
                 <Route path={'/'} element={<Landing socket={socket} />} />
                 <Route path={'/play'} element={<GameRoom socket={socket} />} />

@@ -70,6 +70,7 @@ const SidePanel = ({socket}) => {
         let roomId = uuidV4();
         dispatch(setRoom(roomId));
         dispatch(setUserInfo(user))
+        dispatch(changeLoadingState(true));
 
         socket.emit('create-room', user, roomId);
 

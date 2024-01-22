@@ -11,7 +11,7 @@ import {ToastContainer} from "react-toastify";
 import Loader from "./components/Loader.jsx";
 import io from "socket.io-client";
 
-const socket = io(import.meta.env.VITE_API_SOCKET_LOCAL_URL, {
+const socket = io(import.meta.env.VITE_API_SOCKET_URL, {
     reconnectionDelay: 5000,
     reconnectionAttempts: 5,
 });
