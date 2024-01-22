@@ -1,6 +1,8 @@
 import roomHelper from '../helpers/roomHelper';
 import _ from "lodash";
 import {addNewSocketInfoHandler, checkAndAddSocketData, getSocketInfoByQueryHandler} from "./socketInfoHandler";
+import {ObjectId} from "mongodb";
+import mongoose from "mongoose";
 
 export async function leaveRoomWithSocketId(socket, roomId) {
     try {
@@ -105,7 +107,7 @@ export async function joinUserToRoomHandler(input) {
         let check = userExistInTheRoom(existing_room, model.user);
 
         if(check?.exists) {
-
+            existing_room.users[check?.userIndex] = model.user;
         } else if(existing_room && existing_room.users) {
             existing_room.users.push(model.user);
         }
@@ -117,7 +119,7 @@ export async function joinUserToRoomHandler(input) {
         let joined_user = {};
 
         res.users.forEach(user => {
-            if(user.socket === model.user.socket) {
+            if(user?.socket === model?.user?.socket || user?._id.toString() === model?.user?._id) {
                 joined_user = user;
             }
         })

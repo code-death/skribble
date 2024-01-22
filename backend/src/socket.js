@@ -13,6 +13,12 @@ export default function handleSocketEvents(socket, io) {
             socket.join(roomId);
             try {
                 let {res, joined_user} = await createNewRoomHandler({user: {...data, socket: socket.id}, roomId});
+                let chat = {
+                    text: `joined the game`,
+                    color: '#20ad00',
+                    userName: joined_user.name,
+                };
+                io.to(roomId).emit('receive_message', chat);
                 io.to(roomId).emit('joined-room', res, joined_user);
             } catch (e) {
                 console.log(e);
@@ -25,6 +31,12 @@ export default function handleSocketEvents(socket, io) {
             socket.join(roomId);
             try {
                 let {res, joined_user} = await joinUserToRoomHandler({user: {...data, socket: socket.id}, roomId});
+                let chat = {
+                    text: `joined the game`,
+                    color: '#20ad00',
+                    userName: joined_user.name,
+                };
+                io.to(roomId).emit('receive_message', chat);
                 io.to(roomId).emit('joined-room', res, joined_user);
             } catch (e) {
                 console.log(e)
@@ -41,6 +53,12 @@ export default function handleSocketEvents(socket, io) {
                 await Promise.all(rooms_to_leave.map(async roomId => {
                     let {res, left_user} = await leaveRoomWithSocketId(left_socket, roomId);
                     if(left_user && !_.isEmpty(left_user)) {
+                        let chat = {
+                            text: `left the game`,
+                            color: '#e00000',
+                            userName: left_user.name,
+                        };
+                        io.to(roomId).emit('receive_message', chat);
                         io.to(roomId).emit('left-room', res, left_user);
                     }
                 }))

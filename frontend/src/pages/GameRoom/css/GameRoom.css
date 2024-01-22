@@ -43,7 +43,7 @@
 
 .user-list {
     display: flex;
-    gap: 20px;
+    gap: 10.5px;
     flex-direction: column;
     justify-content: flex-start;
     width: 16%;
@@ -52,7 +52,7 @@
 .user-card {
     transform: scale(1);
     min-width: 96%;
-    padding: 8px 5px 0;
+    padding: 4px 5px 0;
     width: max-content;
     align-items: flex-end;
     text-align: center;
@@ -64,7 +64,7 @@
     background-color: white;
     border-radius: 12px;
     transition: transform 300ms ease-in-out;
-    height: 50px;
+    height: 64.4px;
 }
 
 .user-avatar-back {
@@ -118,6 +118,7 @@
 }
 
 .drawing-board {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -128,7 +129,7 @@
 .drawing-area {
     min-height: 490px;
     overflow: hidden;
-    height: 87.4%;
+    height: 543px;
     background-color: white;
     width: 97%;
     border-radius: 12px;
@@ -136,7 +137,7 @@
 
 .drawing-tools {
     overflow: scroll;
-    padding: 0px 16px;
+    padding: 0px 11px;
     height: 10.9%;
     background-color: white;
     width: 94.2%;
@@ -224,13 +225,12 @@ input[type='color'] {
     gap: 12px;
     justify-content: space-between;
     width: 25%;
-    height: max-content;
 }
 
 .chats {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 67vh;
+    height: 520px;
 }
 
 .chat-input {
