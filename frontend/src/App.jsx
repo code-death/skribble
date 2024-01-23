@@ -15,6 +15,7 @@ function App({socket}) {
 
     useEffect(() => {
         const handleConnect = () => {
+            console.log(socket.id + " connected")
             dispatch(changeLoadingState(false));
             dispatch(setSocketId(socket.id))
         };

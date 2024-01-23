@@ -8,14 +8,15 @@ import handleSocketEvents from "./socket";
 const socketApp = express();
 const server = createServer(socketApp)
 export const io = new Server(server, {
-    cors: ['http://localhost:3000']
+    cors: ['http://localhost:3000', 'https://skribble-chi.vercel.app']
 });
 
-server.listen(process.env.SOCKET_PORT, () => {
-    console.log(`Server running on port ${process.env.SOCKET_PORT}!`)
+server.listen(process.env.PORT || 8102, () => {
+    console.log(`Server running on port ${process.env.PORT}!`)
 })
 
 io.on('connection', (socket) => {
+    console.log(socket.id, " connected")
     handleSocketEvents(socket, io);
     socket.on('reconnect', (attemptNumber) => {
         console.log(`Socket ${socket.id} reconnected (attempt ${attemptNumber})`);
