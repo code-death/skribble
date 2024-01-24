@@ -23,6 +23,14 @@
     box-shadow: rgba(116, 123, 255, 0.3) 4px 5px 20px 0px;
 }
 
+.settings-icon {
+    transition: 100ms ease-in-out;
+}
+
+.settings-icon:hover {
+    transform: rotate(90deg) scale(1.1);
+}
+
 .timer {
     width: 32px;
 }
@@ -272,4 +280,23 @@ input[type='color'] {
 .disabled-overlay {
     pointer-events: none;
     background-color: #dedede;
+}
+
+.game-settings {
+    position: absolute;
+    width: 55.1%;
+    height: inherit;
+    background-color: #1a1a1a9c;
+    z-index: 10;
+    border-radius: 12px;
+}
+
+.settings-option {
+    display: flex;
+    padding: 32px;
+    justify-content: space-between;
+}
+
+.settings-select {
+    width: 300px;
 }

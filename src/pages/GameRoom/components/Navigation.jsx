@@ -1,6 +1,7 @@
 import TimerClock from "./TimerClock.jsx";
 import RoundInfo from "./RoundInfo.jsx";
 import WordGuess from "./WordGuess.jsx";
+import {SettingFilled} from "@ant-design/icons";
 
 const Navigation = ({roundInfo, gameStarted, roundTimer}) => {
     return (
@@ -20,8 +21,8 @@ const Navigation = ({roundInfo, gameStarted, roundTimer}) => {
                     gameStarted={gameStarted}
                 />
             </div>
-            <div style={{width: '24%', textAlign: 'end'}}>
-                Settings
+            <div style={{width: '24%', textAlign: 'end', cursor: 'pointer'}}>
+                <SettingFilled className={'settings-icon'} />
             </div>
         </div>
     )

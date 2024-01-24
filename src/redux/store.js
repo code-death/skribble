@@ -8,7 +8,8 @@ const roomSlice = createSlice({
         user: {},
         userList: [],
         isLoading: true,
-        socket: ''
+        socket: '',
+        gameStarted: false
     },
     reducers: {
         setRoomId: (state, action) => {

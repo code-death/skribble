@@ -3,63 +3,10 @@ import {useEffect, useLayoutEffect, useState} from "react";
 import {ColorPicker, Select, Tooltip} from "antd";
 import {ClearOutlined, FormatPainterFilled, FormatPainterOutlined, RedoOutlined, UndoOutlined} from "@ant-design/icons";
 import {useSelector} from "react-redux";
+import {Tools, ConstantColors, ConstantColors2} from '../../../constants/constant.js'
+import GameSettings from "./GameSettings.jsx";
 
 const roughGenerator = rough.generator();
-
-const Tools = [
-    {
-        value: 'pencil',
-        label: 'Pencil',
-        icon: '/icons/pencil.png'
-    },
-    {
-        value: 'line',
-        label: 'Line',
-        icon: '/icons/line.png'
-    },
-    {
-        value: 'rectangle',
-        label: 'Rectangle',
-        icon: '/icons/rectangle.png'
-    },
-    {
-        value: 'circle',
-        label: 'Circle',
-        icon: '/icons/circle.png'
-    }
-]
-
-const ConstantColors = [
-    "#D7D7D7",
-    "#c1c1c1",
-    "#ef130b",
-    "#ff7100",
-    "#ffe400",
-    "#00cc00",
-    "#00ff91",
-    "#00b2ff",
-    "#231fd3",
-    "#a300ba",
-    "#df69a7",
-    "#ffac8e",
-    "#a0522d"
-]
-
-const ConstantColors2 = [
-    "#000000",
-    "#505050",
-    "#740b07",
-    "#c23800",
-    "#e8a200",
-    "#004619",
-    "#00785d",
-    "#00569e",
-    "#0e0865",
-    "#550069",
-    "#873554",
-    "#cc774d",
-    "#63300d"
-]
 
 const DrawingBoard = ({
                           canvasRef,
@@ -77,6 +24,7 @@ const DrawingBoard = ({
     const [lineWidth, setLineWidth] = useState(2);
 
     const user = useSelector(state => state.user);
+    const gameStarted = useSelector(state => state.gameStarted)
 
     useEffect(() => {
         if (user.isDrawer) {
@@ -93,7 +41,7 @@ const DrawingBoard = ({
 
     useEffect(() => {
         socket.on('shape-drawn', (res, l) => {
-            if(res?.length === 0) {
+            if (res?.length === 0) {
                 const canvas = canvasRef.current;
                 const ctx = canvas.getContext('2d');
                 ctx.fillRect = '#FFFFFF';
@@ -189,180 +137,186 @@ const DrawingBoard = ({
         }
     }
     const handleMouseDown = (e) => {
-        const {offsetX, offsetY} = e.nativeEvent;
+        if(gameStarted) {
+            const {offsetX, offsetY} = e.nativeEvent;
 
-        switch (activeTool) {
-            case 'pencil' : {
-                setElements(prev => [
-                    ...prev,
-                    {
-                        path: [[offsetX, offsetY]],
-                        stroke: activeColor,
-                        strokeWidth: lineWidth,
-                        tool: 'pencil'
-                    }
-                ])
-                setIsDrawing(true)
+            switch (activeTool) {
+                case 'pencil' : {
+                    setElements(prev => [
+                        ...prev,
+                        {
+                            path: [[offsetX, offsetY]],
+                            stroke: activeColor,
+                            strokeWidth: lineWidth,
+                            tool: 'pencil'
+                        }
+                    ])
+                    setIsDrawing(true)
+                }
+                    break;
+                case 'line' : {
+                    setElements(prev => [
+                        ...prev,
+                        {
+                            offsetX,
+                            offsetY,
+                            width: offsetX,
+                            height: offsetY,
+                            stroke: activeColor,
+                            strokeWidth: lineWidth,
+                            tool: 'line'
+                        }
+                    ])
+                    setIsDrawing(true)
+                }
+                    break;
+                case 'rectangle' : {
+                    setElements(prev => [
+                        ...prev,
+                        {
+                            offsetX,
+                            offsetY,
+                            width: 0,
+                            height: 0,
+                            stroke: activeColor,
+                            strokeWidth: lineWidth,
+                            tool: 'rectangle'
+                        }
+                    ])
+                    setIsDrawing(true)
+                }
+                    break;
+                case 'circle' : {
+                    setElements(prev => [
+                        ...prev,
+                        {
+                            offsetX,
+                            offsetY,
+                            radius: 0,
+                            stroke: activeColor,
+                            strokeWidth: lineWidth,
+                            tool: 'circle'
+                        }
+                    ])
+                    setIsDrawing(true)
+                }
+                    break;
+                default: {
+                    setElements(prev => [
+                        ...prev,
+                        {
+                            offsetX,
+                            offsetY,
+                            path: [[offsetX, offsetY]],
+                            stroke: activeColor,
+                            strokeWidth: lineWidth
+                        }
+                    ])
+                    setIsDrawing(true)
+                }
+                    break
             }
-                break;
-            case 'line' : {
-                setElements(prev => [
-                    ...prev,
-                    {
-                        offsetX,
-                        offsetY,
-                        width: offsetX,
-                        height: offsetY,
-                        stroke: activeColor,
-                        strokeWidth: lineWidth,
-                        tool: 'line'
-                    }
-                ])
-                setIsDrawing(true)
-            }
-                break;
-            case 'rectangle' : {
-                setElements(prev => [
-                    ...prev,
-                    {
-                        offsetX,
-                        offsetY,
-                        width: 0,
-                        height: 0,
-                        stroke: activeColor,
-                        strokeWidth: lineWidth,
-                        tool: 'rectangle'
-                    }
-                ])
-                setIsDrawing(true)
-            }
-                break;
-            case 'circle' : {
-                setElements(prev => [
-                    ...prev,
-                    {
-                        offsetX,
-                        offsetY,
-                        radius: 0,
-                        stroke: activeColor,
-                        strokeWidth: lineWidth,
-                        tool: 'circle'
-                    }
-                ])
-                setIsDrawing(true)
-            }
-                break;
-            default: {
-                setElements(prev => [
-                    ...prev,
-                    {
-                        offsetX,
-                        offsetY,
-                        path: [[offsetX, offsetY]],
-                        stroke: activeColor,
-                        strokeWidth: lineWidth
-                    }
-                ])
-                setIsDrawing(true)
-            }
-                break
         }
     }
 
     const handleMouseUp = () => {
-        setIsDrawing(false)
+        if(gameStarted) {
+            setIsDrawing(false)
+        }
     }
 
     const handleMouseMove = (e) => {
-        const {offsetX, offsetY} = e.nativeEvent;
-        if (isDrawing) {
-            if (elements && elements.length !== 0) {
-                switch (activeTool) {
-                    case 'pencil' : {
-                        const {path} = elements[elements.length - 1];
-                        const newPath = [...path, [offsetX, offsetY]];
+        if(gameStarted) {
+            const {offsetX, offsetY} = e.nativeEvent;
+            if (isDrawing) {
+                if (elements && elements.length !== 0) {
+                    switch (activeTool) {
+                        case 'pencil' : {
+                            const {path} = elements[elements.length - 1];
+                            const newPath = [...path, [offsetX, offsetY]];
 
-                        let tempElements = elements.map((element, index) => {
-                            if (index === elements.length - 1) {
-                                return {
-                                    ...element,
-                                    path: newPath
-                                }
-                            } else {
-                                return element
-                            }
-                        })
-
-                        setElements(tempElements);
-                    }
-                        break;
-                    case 'line' : {
-                        let tempElements = elements.map((element, index) => {
-                            if (index === elements.length - 1) {
-                                return {
-                                    ...element,
-                                    width: offsetX,
-                                    height: offsetY
-                                }
-                            } else {
-                                return element;
-                            }
-                        })
-
-                        setElements(tempElements);
-                    }
-                        break;
-                    case 'rectangle' : {
-                        let tempElements = elements.map((element, index) => {
+                            let tempElements = elements.map((element, index) => {
                                 if (index === elements.length - 1) {
                                     return {
                                         ...element,
-                                        width: offsetX - element.offsetX,
-                                        height: offsetY - element.offsetY,
+                                        path: newPath
                                     }
                                 } else {
                                     return element
                                 }
-                            }
-                        )
+                            })
 
-                        setElements(tempElements);
-                    }
-                        break;
-                    case 'circle' : {
-                        let tempElements = elements.map((element, index) => {
+                            setElements(tempElements);
+                        }
+                            break;
+                        case 'line' : {
+                            let tempElements = elements.map((element, index) => {
                                 if (index === elements.length - 1) {
                                     return {
                                         ...element,
-                                        radius: 2 * Math.sqrt(Math.pow(offsetX - element.offsetX, 2) + Math.pow(offsetY - element.offsetY, 2)),
+                                        width: offsetX,
+                                        height: offsetY
+                                    }
+                                } else {
+                                    return element;
+                                }
+                            })
+
+                            setElements(tempElements);
+                        }
+                            break;
+                        case 'rectangle' : {
+                            let tempElements = elements.map((element, index) => {
+                                    if (index === elements.length - 1) {
+                                        return {
+                                            ...element,
+                                            width: offsetX - element.offsetX,
+                                            height: offsetY - element.offsetY,
+                                        }
+                                    } else {
+                                        return element
+                                    }
+                                }
+                            )
+
+                            setElements(tempElements);
+                        }
+                            break;
+                        case 'circle' : {
+                            let tempElements = elements.map((element, index) => {
+                                    if (index === elements.length - 1) {
+                                        return {
+                                            ...element,
+                                            radius: 2 * Math.sqrt(Math.pow(offsetX - element.offsetX, 2) + Math.pow(offsetY - element.offsetY, 2)),
+                                        }
+                                    } else {
+                                        return element
+                                    }
+                                }
+                            )
+
+                            setElements(tempElements);
+                        }
+                            break;
+                        default: {
+                            const {path} = elements[elements.length - 1];
+                            const newPath = [...path, [offsetX, offsetY]];
+
+                            let tempElements = elements.map((element, index) => {
+                                if (index === elements.length - 1) {
+                                    return {
+                                        ...element,
+                                        path: newPath
                                     }
                                 } else {
                                     return element
                                 }
-                            }
-                        )
+                            })
 
-                        setElements(tempElements);
+                            setElements(tempElements);
+                        }
+                            break
                     }
-                        break;
-                    default: {
-                        const {path} = elements[elements.length - 1];
-                        const newPath = [...path, [offsetX, offsetY]];
-
-                        let tempElements = elements.map((element, index) => {
-                            if (index === elements.length - 1) {
-                                return {
-                                    ...element,
-                                    path: newPath
-                                }
-                            } else {
-                                return element
-                            }
-                        })
-
-                        setElements(tempElements);
-                    }
-                        break
                 }
             }
         }
@@ -419,7 +373,13 @@ const DrawingBoard = ({
             <div className={'drawing-area'}>
                 {
                     user.isDrawer ?
-                        <div style={{position: 'absolute', display: 'flex', right: '28.5vw', gap: '8px', marginTop: '8px'}}>
+                        <div style={{
+                            position: 'absolute',
+                            display: 'flex',
+                            right: '28.5vw',
+                            gap: '8px',
+                            marginTop: '8px'
+                        }}>
                             <Tooltip
                                 title={'Undo'}
                                 color={'#9499ff'}
@@ -455,6 +415,9 @@ const DrawingBoard = ({
                             </Tooltip>
                         </div> :
                         null
+                }
+                {
+                    !gameStarted ? <GameSettings /> :null
                 }
                 <canvas
                     ref={canvasRef}
@@ -499,12 +462,54 @@ const DrawingBoard = ({
                         onChange={e => setLineWidth(e)}
                         value={lineWidth}
                     >
-                        <Select.Option value={2}><div style={{width: '100%', height: `2px`, backgroundColor: activeColor, borderRadius: '100px'}}></div></Select.Option>
-                        <Select.Option value={4}><div style={{width: '100%', height: `4px`, backgroundColor: activeColor, borderRadius: '100px'}}></div></Select.Option>
-                        <Select.Option value={6}><div style={{width: '100%', height: `6px`, backgroundColor: activeColor, borderRadius: '100px'}}></div></Select.Option>
-                        <Select.Option value={8}><div style={{width: '100%', height: `8px`, backgroundColor: activeColor, borderRadius: '100px'}}></div></Select.Option>
-                        <Select.Option value={10}><div style={{width: '100%', height: `10px`, backgroundColor: activeColor, borderRadius: '100px'}}></div></Select.Option>
-                        <Select.Option value={12}><div style={{width: '100%', height: `12px`, backgroundColor: activeColor, borderRadius: '100px'}}></div></Select.Option>
+                        <Select.Option value={2}>
+                            <div style={{
+                                width: '100%',
+                                height: `2px`,
+                                backgroundColor: activeColor,
+                                borderRadius: '100px'
+                            }}></div>
+                        </Select.Option>
+                        <Select.Option value={4}>
+                            <div style={{
+                                width: '100%',
+                                height: `4px`,
+                                backgroundColor: activeColor,
+                                borderRadius: '100px'
+                            }}></div>
+                        </Select.Option>
+                        <Select.Option value={6}>
+                            <div style={{
+                                width: '100%',
+                                height: `6px`,
+                                backgroundColor: activeColor,
+                                borderRadius: '100px'
+                            }}></div>
+                        </Select.Option>
+                        <Select.Option value={8}>
+                            <div style={{
+                                width: '100%',
+                                height: `8px`,
+                                backgroundColor: activeColor,
+                                borderRadius: '100px'
+                            }}></div>
+                        </Select.Option>
+                        <Select.Option value={10}>
+                            <div style={{
+                                width: '100%',
+                                height: `10px`,
+                                backgroundColor: activeColor,
+                                borderRadius: '100px'
+                            }}></div>
+                        </Select.Option>
+                        <Select.Option value={12}>
+                            <div style={{
+                                width: '100%',
+                                height: `12px`,
+                                backgroundColor: activeColor,
+                                borderRadius: '100px'
+                            }}></div>
+                        </Select.Option>
                     </Select>
                 </div>
                 <div style={{display: 'flex', alignItems: 'center'}}>
