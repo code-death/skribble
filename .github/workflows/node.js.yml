@@ -28,3 +28,5 @@ jobs:
 
     - name: Build Vite app
       run: npm run build
+      env:
+        VITE_API_SOCKET_URL: ${{ env.VITE_API_SOCKET_URL }}
