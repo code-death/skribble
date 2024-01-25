@@ -24,7 +24,9 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
 
     - name: Build Vite app
       run: npm run build
+      env:
+        VITE_API_SOCKET_URL: ${{ env.VITE_API_SOCKET_URL }}
