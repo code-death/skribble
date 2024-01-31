@@ -3,7 +3,7 @@ import RoundInfo from "./RoundInfo.jsx";
 import WordGuess from "./WordGuess.jsx";
 import {SettingFilled} from "@ant-design/icons";
 
-const Navigation = ({roundInfo, gameStarted, roundTimer}) => {
+const Navigation = ({roundInfo, gameStarted, roundTimer, activeUser}) => {
     return (
         <div className={'game-navbar'}>
             <div style={{display: 'flex', alignItems: 'center', gap: '24px', width: '24%'}}>
@@ -22,7 +22,7 @@ const Navigation = ({roundInfo, gameStarted, roundTimer}) => {
                 />
             </div>
             <div style={{width: '24%', textAlign: 'end', cursor: 'pointer'}}>
-                <SettingFilled className={'settings-icon'} />
+                {activeUser.isHost ? <SettingFilled className={'settings-icon'} /> : null}
             </div>
         </div>
     )

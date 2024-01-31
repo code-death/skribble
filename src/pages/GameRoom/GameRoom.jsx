@@ -35,6 +35,8 @@ const GameRoom = ({socket}) => {
         let chat = {};
         chat.text = answer;
         chat.userName = user.name;
+        chat.userId = user._id;
+        chat.userSocket = user.socket;
         chat.color = color ? color : 'black';
 
         socket.emit('guess-word', chat, roomId)
@@ -83,6 +85,10 @@ const GameRoom = ({socket}) => {
             }
         });
 
+        socket.on('round-ended', (res) => {
+            console.log(res);
+        })
+
     }, []);
 
     useEffect(() => {
@@ -97,6 +103,7 @@ const GameRoom = ({socket}) => {
     return (
         <div className={'game-room-container'}>
             <Navigation
+                activeUser={user}
                 roundTimer={roundTimer}
                 gameStarted={gameStarted}
                 roundInfo={roundInfo}

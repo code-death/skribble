@@ -9,7 +9,19 @@ const roomSlice = createSlice({
         userList: [],
         isLoading: true,
         socket: '',
-        gameStarted: false
+        gameStarted: false,
+        roomInfo: {
+            currentRound: 0,
+            totalRounds: 3,
+            roundInterval: 80,
+            hints: 1,
+            wordCategories: [
+                'movies/tv_shows',
+                'color',
+                'mythology',
+            ],
+        },
+        wordOfTheRound: ''
     },
     reducers: {
         setRoomId: (state, action) => {
@@ -35,6 +47,15 @@ const roomSlice = createSlice({
         },
         setSocketId: (state, action) => {
             state.socket = action.payload
+        },
+        setRoomInfo: (state, action) => {
+            state.roomInfo = action.payload;
+        },
+        setGameState: (state, action) => {
+            state.gameStarted = action.payload
+        },
+        setWordOfTheRound: (state, action) => {
+            state.wordOfTheRound = action.payload
         }
     }
 })
@@ -45,7 +66,10 @@ export const {
     updateActiveUserList,
     removeUser,
     changeLoadingState,
-    setSocketId
+    setSocketId,
+    setRoomInfo,
+    setGameState,
+    setWordOfTheRound
 } = roomSlice.actions
 
 const store = configureStore({

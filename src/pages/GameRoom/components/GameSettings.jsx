@@ -2,6 +2,8 @@ import {motion} from "framer-motion";
 import {Select} from "antd";
 import {WordCategories, DrawTime, TotalRounds, TotalHints} from '../../../constants/constant.js'
 import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setRoomInfo} from "../../../redux/store.js";
 
 const GameSettings = () => {
     const [drawTime, setDrawTime] = useState(80);
@@ -13,12 +15,23 @@ const GameSettings = () => {
     const [totalRounds, setTotalRounds] = useState(3);
     const [totalHints, setTotalHints] = useState(1);
 
+    const dispatch = useDispatch();
+
+    const activeUser = useSelector(state => state.user);
+    const roomInfo = useSelector(state => state.roomInfo);
+
     const handleCategoryChange = (e) => {
         setWordCategories(e);
     }
 
+    const handleChangeData = (e, key) => {
+        let room = {...roomInfo};
+        room[key] = e;
+        dispatch(setRoomInfo(room));
+    }
+
     return (
-        <motion.div
+        activeUser?.isHost ? <motion.div
             initial={{y: 0, x: 0, opacity: 0}}
             animate={{x: 0, y: 0, opacity: 100}}
             transition={{
@@ -31,42 +44,53 @@ const GameSettings = () => {
                 <p>Draw time</p>
                 <Select
                     className={'settings-select'}
-                    onChange={e => setDrawTime(e)}
-                    value={drawTime}
+                    onChange={e => handleChangeData(e, 'roundInterval')}
+                    value={roomInfo.roundInterval}
                     options={DrawTime}
                 />
             </div>
             <div className={'settings-option'}>
                 <p>Rounds</p>
                 <Select
-                    onChange={e => setTotalRounds(e)}
+                    onChange={e => handleChangeData(e, 'totalRounds')}
                     className={'settings-select'}
-                    value={totalRounds}
+                    value={roomInfo.totalRounds}
                     options={TotalRounds}
                 />
             </div>
             <div className={'settings-option'}>
                 <p>Hints</p>
                 <Select
-                    onChange={e => setTotalHints(e)}
+                    onChange={e => handleChangeData(e, 'hints')}
                     className={'settings-select'}
-                    value={totalHints}
+                    value={roomInfo.hints}
                     options={TotalHints}
                 />
             </div>
             <div className={'settings-option'}>
                 <p>Word Categories</p>
                 <Select
-                    onChange={handleCategoryChange}
+                    onChange={e => handleChangeData(e, 'wordCategories')}
                     allowClear
                     mode={"multiple"}
                     className={'settings-select'}
-                    value={wordCategories}
+                    value={roomInfo.wordCategories}
                     options={WordCategories}
                 />
             </div>
 
-        </motion.div>
+        </motion.div> :
+            <motion.div
+                initial={{y: 0, x: 0, opacity: 0}}
+                animate={{x: 0, y: 0, opacity: 100}}
+                transition={{
+                    duration: 1,
+                    ease: 'easeInOut'
+                }}
+                className={'game-settings'}
+            >
+
+            </motion.div>
     )
 }
 

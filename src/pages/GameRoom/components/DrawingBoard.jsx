@@ -2,9 +2,12 @@ import rough from 'roughjs'
 import {useEffect, useLayoutEffect, useState} from "react";
 import {ColorPicker, Select, Tooltip} from "antd";
 import {ClearOutlined, FormatPainterFilled, FormatPainterOutlined, RedoOutlined, UndoOutlined} from "@ant-design/icons";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Tools, ConstantColors, ConstantColors2} from '../../../constants/constant.js'
 import GameSettings from "./GameSettings.jsx";
+import _ from "lodash";
+import {setGameState, setRoomInfo, setUserInfo, setWordOfTheRound} from "../../../redux/store.js";
+import ChooseWord from "./ChooseWord.jsx";
 
 const roughGenerator = rough.generator();
 
@@ -22,9 +25,14 @@ const DrawingBoard = ({
     const [activeTool, setActiveTool] = useState('pencil');
     const [activeColor, setActiveColor] = useState('#000000');
     const [lineWidth, setLineWidth] = useState(2);
+    const [isChoosingWord, setIsChoosingWord] = useState(false);
+    const [randomWords, setRandomWords] = useState(false);
+
+    const dispatch = useDispatch();
 
     const user = useSelector(state => state.user);
-    const gameStarted = useSelector(state => state.gameStarted)
+    const gameStarted = useSelector(state => state.gameStarted);
+    const roomInfo = useSelector(state => state.roomInfo);
 
     useEffect(() => {
         if (user.isDrawer) {
@@ -49,6 +57,30 @@ const DrawingBoard = ({
             }
 
             setElements(res);
+        })
+
+        socket.on('game-started', (res) => {
+            if(!_.isEmpty(res)) {
+                dispatch(setRoomInfo(res));
+                dispatch(setGameState(true));
+                setIsChoosingWord(true);
+                res?.users.forEach(resUser => {
+                    if(resUser?.socket === user?.socket || resUser?._id === user?._id) {
+                        dispatch(setUserInfo(resUser));
+                    }
+                });
+            }
+        })
+
+        socket.on('choose-word', (res) => {
+            setIsDrawing(true);
+            setRandomWords(res);
+        })
+
+        socket.on('round-started', (word, res) => {
+            setIsChoosingWord(false);
+            dispatch(setWordOfTheRound(word));
+            dispatch(setRoomInfo(res))
         })
     }, []);
 
@@ -137,7 +169,7 @@ const DrawingBoard = ({
         }
     }
     const handleMouseDown = (e) => {
-        if(gameStarted) {
+        if(gameStarted && user.isDrawer) {
             const {offsetX, offsetY} = e.nativeEvent;
 
             switch (activeTool) {
@@ -220,13 +252,13 @@ const DrawingBoard = ({
     }
 
     const handleMouseUp = () => {
-        if(gameStarted) {
+        if(gameStarted && user.isDrawer) {
             setIsDrawing(false)
         }
     }
 
     const handleMouseMove = (e) => {
-        if(gameStarted) {
+        if(gameStarted && user.isDrawer) {
             const {offsetX, offsetY} = e.nativeEvent;
             if (isDrawing) {
                 if (elements && elements.length !== 0) {
@@ -335,7 +367,7 @@ const DrawingBoard = ({
 
 
             tempElements.forEach(element => {
-                handleDraw(element, roughCanvas)
+                handleDraw(element, roughCanvas);
             });
 
             setHistoryElements(prev => [...prev, undoElement]);
@@ -367,6 +399,13 @@ const DrawingBoard = ({
         }
     }
 
+    const handleStartGame = () => {
+        socket.emit('start-game', roomInfo, roomId);
+    }
+
+    const handleChooseWord = (word) => {
+        socket.emit('round-start', word, roomId);
+    }
 
     return (
         <div className={'drawing-board'}>
@@ -417,7 +456,7 @@ const DrawingBoard = ({
                         null
                 }
                 {
-                    !gameStarted ? <GameSettings /> :null
+                    !gameStarted ? <GameSettings /> : isChoosingWord ? <ChooseWord activeUser={user} randomWords={randomWords} handleChooseWord={handleChooseWord} /> : null
                 }
                 <canvas
                     ref={canvasRef}
@@ -428,118 +467,128 @@ const DrawingBoard = ({
                     onMouseMove={handleMouseMove}
                 />
             </div>
-            <div className={`drawing-tools ${!user.isDrawer ? 'disabled-overlay' : ''}`}>
-                <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                    <ColorPicker
-                        size={'large'}
-                        value={activeColor}
-                        onChange={color => setActiveColor(color.toHexString())}
-                    />
-                    <div>
-                        <div style={{display: 'flex', alignItems: 'center', gap: '1px', marginBottom: '1px'}}>
-                            {
-                                ConstantColors.map((color, index) => <div key={index}
-                                                                          onClick={() => setActiveColor(color)}
-                                                                          style={{backgroundColor: `${color}`}}
-                                                                          className={'color-picker'}></div>)
-                            }
-                        </div>
-                        <div style={{display: 'flex', alignItems: 'center', gap: '1px'}}>
-                            {
-                                ConstantColors2.map((color, index) => <div key={index}
-                                                                           onClick={() => setActiveColor(color)}
-                                                                           style={{backgroundColor: `${color}`}}
-                                                                           className={'color-picker'}></div>)
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div className={'line-picker'}>
-                    <Select
-                        suffixIcon={false}
-                        size={'large'}
-                        style={{width: '100px'}}
-                        onChange={e => setLineWidth(e)}
-                        value={lineWidth}
-                    >
-                        <Select.Option value={2}>
-                            <div style={{
-                                width: '100%',
-                                height: `2px`,
-                                backgroundColor: activeColor,
-                                borderRadius: '100px'
-                            }}></div>
-                        </Select.Option>
-                        <Select.Option value={4}>
-                            <div style={{
-                                width: '100%',
-                                height: `4px`,
-                                backgroundColor: activeColor,
-                                borderRadius: '100px'
-                            }}></div>
-                        </Select.Option>
-                        <Select.Option value={6}>
-                            <div style={{
-                                width: '100%',
-                                height: `6px`,
-                                backgroundColor: activeColor,
-                                borderRadius: '100px'
-                            }}></div>
-                        </Select.Option>
-                        <Select.Option value={8}>
-                            <div style={{
-                                width: '100%',
-                                height: `8px`,
-                                backgroundColor: activeColor,
-                                borderRadius: '100px'
-                            }}></div>
-                        </Select.Option>
-                        <Select.Option value={10}>
-                            <div style={{
-                                width: '100%',
-                                height: `10px`,
-                                backgroundColor: activeColor,
-                                borderRadius: '100px'
-                            }}></div>
-                        </Select.Option>
-                        <Select.Option value={12}>
-                            <div style={{
-                                width: '100%',
-                                height: `12px`,
-                                backgroundColor: activeColor,
-                                borderRadius: '100px'
-                            }}></div>
-                        </Select.Option>
-                    </Select>
-                </div>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                    {
-                        Tools.map((tool, index) => (
-                            <div onClick={() => setActiveTool(tool.value)} key={index}
-                                 className={`tool-container ${tool.value === activeTool ? 'tool-container-active' : ''}`}>
-                                <img height={'24px'} src={tool.icon} alt={tool.label}/>
+            {
+                gameStarted ?
+                    <div className={`drawing-tools ${!user.isDrawer ? 'disabled-overlay' : ''}`}>
+                    <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                        <ColorPicker
+                            size={'large'}
+                            value={activeColor}
+                            onChange={color => setActiveColor(color.toHexString())}
+                        />
+                        <div>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1px', marginBottom: '1px'}}>
+                                {
+                                    ConstantColors.map((color, index) => <div key={index}
+                                                                              onClick={() => setActiveColor(color)}
+                                                                              style={{backgroundColor: `${color}`}}
+                                                                              className={'color-picker'}></div>)
+                                }
                             </div>
-                        ))
-                    }
-                    <div onClick={() => setActiveTool('paint')} key={'paint'}
-                         className={`tool-container ${'paint' === activeTool ? 'tool-container-active' : ''}`}>
-                        {'paint' === activeTool ?
-                            <FormatPainterFilled
-                                style={{
-                                    fontSize: '28px',
-                                    color: '#000'
-                                }}
-                            /> :
-                            <FormatPainterOutlined
-                                style={{
-                                    fontSize: '28px',
-                                    color: '#000'
-                                }}
-                            />
-                        }
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1px'}}>
+                                {
+                                    ConstantColors2.map((color, index) => <div key={index}
+                                                                               onClick={() => setActiveColor(color)}
+                                                                               style={{backgroundColor: `${color}`}}
+                                                                               className={'color-picker'}></div>)
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div className={'line-picker'}>
+                        <Select
+                            suffixIcon={false}
+                            size={'large'}
+                            style={{width: '100px'}}
+                            onChange={e => setLineWidth(e)}
+                            value={lineWidth}
+                        >
+                            <Select.Option value={2}>
+                                <div style={{
+                                    width: '100%',
+                                    height: `2px`,
+                                    backgroundColor: activeColor,
+                                    borderRadius: '100px'
+                                }}></div>
+                            </Select.Option>
+                            <Select.Option value={4}>
+                                <div style={{
+                                    width: '100%',
+                                    height: `4px`,
+                                    backgroundColor: activeColor,
+                                    borderRadius: '100px'
+                                }}></div>
+                            </Select.Option>
+                            <Select.Option value={6}>
+                                <div style={{
+                                    width: '100%',
+                                    height: `6px`,
+                                    backgroundColor: activeColor,
+                                    borderRadius: '100px'
+                                }}></div>
+                            </Select.Option>
+                            <Select.Option value={8}>
+                                <div style={{
+                                    width: '100%',
+                                    height: `8px`,
+                                    backgroundColor: activeColor,
+                                    borderRadius: '100px'
+                                }}></div>
+                            </Select.Option>
+                            <Select.Option value={10}>
+                                <div style={{
+                                    width: '100%',
+                                    height: `10px`,
+                                    backgroundColor: activeColor,
+                                    borderRadius: '100px'
+                                }}></div>
+                            </Select.Option>
+                            <Select.Option value={12}>
+                                <div style={{
+                                    width: '100%',
+                                    height: `12px`,
+                                    backgroundColor: activeColor,
+                                    borderRadius: '100px'
+                                }}></div>
+                            </Select.Option>
+                        </Select>
+                    </div>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        {
+                            Tools.map((tool, index) => (
+                                <div onClick={() => setActiveTool(tool.value)} key={index}
+                                     className={`tool-container ${tool.value === activeTool ? 'tool-container-active' : ''}`}>
+                                    <img height={'24px'} src={tool.icon} alt={tool.label}/>
+                                </div>
+                            ))
+                        }
+                        <div onClick={() => setActiveTool('paint')} key={'paint'}
+                             className={`tool-container ${'paint' === activeTool ? 'tool-container-active' : ''}`}>
+                            {'paint' === activeTool ?
+                                <FormatPainterFilled
+                                    style={{
+                                        fontSize: '28px',
+                                        color: '#000'
+                                    }}
+                                /> :
+                                <FormatPainterOutlined
+                                    style={{
+                                        fontSize: '28px',
+                                        color: '#000'
+                                    }}
+                                />
+                            }
+                        </div>
+                    </div>
+                </div> :
+                    user.isHost ?
+                        <div onClick={handleStartGame} className={'game-start-button'}>
+                            <p style={{fontSize: '32px', fontWeight: '700', textAlign: 'center'}}>Start Game !</p>
+                        </div> :
+                        <div className={'game-start-button-dummy'}>
+                            <p style={{fontSize: '32px', fontWeight: '700', textAlign: 'center'}}>Waiting for the host to start !</p>
+                        </div>
+            }
         </div>
     )
 }

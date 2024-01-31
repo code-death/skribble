@@ -60,7 +60,7 @@ const SidePanel = ({socket}) => {
         let user = {
             name,
             isHost: true,
-            isDrawer: true,
+            isDrawer: false,
             rank: 1,
             score: 0,
             socket: socket.id,
