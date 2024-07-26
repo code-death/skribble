@@ -20,6 +20,7 @@ const roomSlice = createSlice({
                 'color',
                 'mythology',
             ],
+            turnGoingOn: false,
         },
         wordOfTheRound: ''
     },

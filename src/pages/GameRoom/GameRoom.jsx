@@ -25,6 +25,7 @@ const GameRoom = ({socket}) => {
 
     const user = useSelector(state => state.user);
     const roomId = useSelector(state => state.roomId);
+    const room = useSelector(state => state.roomInfo);
     const userList = useSelector(state => state.userList);
     const socketId = useSelector(state => state.socket)
 
@@ -39,7 +40,13 @@ const GameRoom = ({socket}) => {
         chat.userSocket = user.socket;
         chat.color = color ? color : 'black';
 
-        socket.emit('guess-word', chat, roomId)
+        if(!room.turnGoingOn || (room.turnGoingOn && (user?.turnScore && user.turnScore !== 0))) {
+            socket.emit('send-message', chat, roomId);
+        } else {
+            socket.emit('guess-word', chat, roomId)
+        }
+
+        
     }
 
     useEffect(() => {
