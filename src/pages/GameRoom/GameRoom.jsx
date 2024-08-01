@@ -6,7 +6,7 @@ import DrawingBoard from "./components/DrawingBoard.jsx";
 import ChatBox from "./components/ChatBox.jsx";
 import {useSearchParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {changeLoadingState, setRoomId, setUserInfo, updateActiveUserList} from "../../redux/store.js";
+import {changeLoadingState, setRoomId, setUserInfo, updateActiveUserList, setGameState, setRoomInfo} from "../../redux/store.js";
 import _ from "lodash";
 import {useNavigate} from "react-router";
 import {toast} from "react-toastify";
@@ -17,8 +17,6 @@ const GameRoom = ({socket}) => {
 
     const [elements, setElements] = useState([]);
     const [historyElements, setHistoryElements] = useState([])
-    const [roundInfo, setRoundInfo] = useState({currentRound: 1, totalRounds: 3})
-    const [gameStarted, setGameStarted] = useState(false);
     const [roundTimer, setRoundTimer] = useState(80);
     const [params, setParams] = useSearchParams();
     const [chatThread, setChatThread] = useState([])
@@ -28,6 +26,8 @@ const GameRoom = ({socket}) => {
     const room = useSelector(state => state.roomInfo);
     const userList = useSelector(state => state.userList);
     const socketId = useSelector(state => state.socket)
+    const gameStarted = useSelector(state => state.gameStarted);
+    const roundInfo = useSelector(state => state.roomInfo);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -94,6 +94,19 @@ const GameRoom = ({socket}) => {
 
         socket.on('round-ended', (res) => {
             console.log(res);
+        })
+
+        socket.on('game-started', (res) => {
+            if(!_.isEmpty(res)) {
+                dispatch(setRoomInfo(res));
+                dispatch(setGameState(true));
+                dispatch(setRoundTimer(3));
+                res?.users.forEach(resUser => {
+                    if(resUser?.socket === user?.socket || resUser?._id === user?._id) {
+                        dispatch(setUserInfo(resUser));
+                    }
+                });
+            }
         })
 
     }, []);

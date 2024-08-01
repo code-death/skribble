@@ -40,7 +40,7 @@ const FormActions = (props) => {
                 <button onClick={handleJoinRoom} className={'form-actions-button primary'}>
                     {props.activeRoomId ? "Join The Room" : "Join A Room"}
                 </button>
-                <button onClick={handleCreateRoom} className={'form-actions-button secondary'}>
+                <button disabled={props.activeRoomId} onClick={handleCreateRoom} className={'form-actions-button secondary'}>
                     Create A Room
                 </button>
             </div>

@@ -59,19 +59,6 @@ const DrawingBoard = ({
             setElements(res);
         })
 
-        socket.on('game-started', (res) => {
-            if(!_.isEmpty(res)) {
-                dispatch(setRoomInfo(res));
-                dispatch(setGameState(true));
-                setIsChoosingWord(true);
-                res?.users.forEach(resUser => {
-                    if(resUser?.socket === user?.socket || resUser?._id === user?._id) {
-                        dispatch(setUserInfo(resUser));
-                    }
-                });
-            }
-        })
-
         socket.on('choose-word', (res) => {
             setIsDrawing(true);
             setRandomWords(res);
